@@ -26,6 +26,13 @@ DieHandleTest >> testCreationAdding [
 ]
 
 { #category : 'tests' }
+DieHandleTest >> testD20 [
+	| handle |
+	handle := 2 D20.
+	self assert: handle diceNumber equals: 2
+]
+
+{ #category : 'tests' }
 DieHandleTest >> testRoll [
 	| handle |
 	handle := DieHandle new
