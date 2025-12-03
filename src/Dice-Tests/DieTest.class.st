@@ -6,6 +6,13 @@ Class {
 }
 
 { #category : 'tests' }
+DieTest >> testDSL [
+	| handle |
+	handle := 2 D: 6.
+	self assert: handle diceNumber equals: 2
+]
+
+{ #category : 'tests' }
 DieTest >> testInitializeIsOk [
 	self assert: Die new faces equals: 6
 ]
