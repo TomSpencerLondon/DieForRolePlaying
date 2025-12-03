@@ -6,6 +6,16 @@ Class {
 }
 
 { #category : 'tests' }
+DieTest >> testInitializeIsOk [
+	self assert: Die new faces equals: 6
+]
+
+{ #category : 'tests' }
+DieTest >> testPrintOn [
+	self assert: (Die withFaces: 6) printString equals: 'a Die (6)'
+]
+
+{ #category : 'tests' }
 DieTest >> testRolling [
 	| d|
 	d := Die new.
