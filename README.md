@@ -36,12 +36,18 @@ A collection of dice that can be rolled together.
 | `handle addDie: aDie` | Adds a die to the handle |
 | `handle diceNumber` | Returns the count of dice |
 | `handle roll` | Rolls all dice and returns the sum |
+| `handle dice` | Returns the collection of dice |
+| `handle + anotherHandle` | Combines two handles into a new one |
 
 ### Integer Extension (*Dice protocol)
 
 | Method | Description |
 |--------|-------------|
 | `n D: faces` | Creates a DieHandle with n dice of given faces |
+| `n D4` | Creates a DieHandle with n 4-sided dice |
+| `n D6` | Creates a DieHandle with n 6-sided dice |
+| `n D10` | Creates a DieHandle with n 10-sided dice |
+| `n D20` | Creates a DieHandle with n 20-sided dice |
 
 ## Sequence Diagrams
 
@@ -200,8 +206,10 @@ The `D:` method is added to `Integer` using an **extension protocol** (`*Dice`).
 - [x] Step 5: Rolling a DieHandle
 - [x] Step 6: printOn: for better debugging
 - [x] Step 7: DSL - Integer >> D:
-- [ ] Step 8: DSL - D4, D6, D10, D20
-- [ ] Step 9: DieHandle addition (+)
+- [x] Step 8: DSL - D4, D6, D10, D20
+- [x] Step 9: DieHandle addition (+)
+
+**KATA COMPLETE!**
 
 ## Usage Examples
 
@@ -225,8 +233,13 @@ handle roll.                     "Returns 2-16"
 (3 D: 20) roll.                  "Roll 3d20 - returns 3-60"
 (2 D: 6) diceNumber.             "Returns 2"
 
-"Coming soon - shorthand DSL:"
-(2 D20 + 1 D6) roll.             "Roll 2d20 + 1d6"
+"Shorthand DSL"
+(2 D20) roll.                    "Roll 2d20 - returns 2-40"
+(1 D6) roll.                     "Roll 1d6 - returns 1-6"
+
+"Combining handles"
+(2 D20 + 1 D6) roll.             "Roll 2d20 + 1d6 - returns 3-46"
+(2 D20 + 1 D6) diceNumber.       "Returns 3"
 ```
 
 ## Tests
@@ -243,6 +256,8 @@ Run all tests in the `Dice-Tests` package:
 - `testAddingTwiceTheSameDice` - Can add same die twice
 - `testRoll` - Handle roll sums all dice
 - `testDSL` - `2 D: 6` creates handle with 2 dice
+- `testD20` - `2 D20` creates handle with 2 dice
+- `testAddition` - `(2 D20) + (1 D6)` creates handle with 3 dice
 
 ## Source Code
 
@@ -291,6 +306,9 @@ withFaces: aNumber
 addDie: aDie
     dice add: aDie
 
+dice
+    ^ dice
+
 diceNumber
     ^ dice size
 
@@ -299,6 +317,13 @@ initialize
 
 roll
     ^ dice sum: [ :each | each roll ]
+
++ aDieHandle
+    | newHandle |
+    newHandle := DieHandle new.
+    dice do: [ :each | newHandle addDie: each ].
+    aDieHandle dice do: [ :each | newHandle addDie: each ].
+    ^ newHandle
 ```
 
 #### Integer Extension (*Dice protocol)
@@ -309,6 +334,18 @@ D: aNumber
     handle := DieHandle new.
     self timesRepeat: [ handle addDie: (Die withFaces: aNumber) ].
     ^ handle
+
+D4
+    ^ self D: 4
+
+D6
+    ^ self D: 6
+
+D10
+    ^ self D: 10
+
+D20
+    ^ self D: 20
 ```
 
 ### Package: Dice-Tests
@@ -359,4 +396,14 @@ testDSL
     | handle |
     handle := 2 D: 6.
     self assert: handle diceNumber equals: 2
+
+testD20
+    | handle |
+    handle := 2 D20.
+    self assert: handle diceNumber equals: 2
+
+testAddition
+    | handle |
+    handle := (2 D20) + (1 D6).
+    self assert: handle diceNumber equals: 3
 ```
