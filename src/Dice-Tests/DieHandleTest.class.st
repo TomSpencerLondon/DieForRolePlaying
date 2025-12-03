@@ -16,6 +16,13 @@ DieHandleTest >> testAddingTwiceTheSameDice [
 ]
 
 { #category : 'tests' }
+DieHandleTest >> testAddition [
+	| handle |
+	handle := (2 D20)  + (1 D6).
+	self assert: handle diceNumber equals: 3
+]
+
+{ #category : 'tests' }
 DieHandleTest >> testCreationAdding [
 	| handle |
 	handle := DieHandle new
